@@ -21,5 +21,137 @@ model User {
     createdAt                       DateTime  @default(now())
     updatedAt                       DateTime  @updatedAt
     active                          Boolean   @default(true)
+
+    accountUser AccountUser[]
+    orderInvitation OrderInvitation[]
 }
 
+model AccountUser {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    role_id Int
+    role    Role @relation(fields: [role_id], references: [id])
+}
+
+model Account {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name        String
+    accountUser AccountUser[]
+    client      Client[]
+}
+
+model Client {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    address_id Int
+    address    Address @relation(fields: [address_id], references: [id])
+}
+
+model Address {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    client Client[]
+
+    address      String
+    street       String
+    neighborhood String
+    postal_code  String
+    city         String
+    state        String
+}
+
+model Role {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name        String
+    description String
+    accountUser AccountUser[]
+    rolePermission RolePermission[]
+}
+
+model RolePermission {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    role_id       Int
+    role          Role @relation(fields: [role_id], references: [id])
+    
+    permission_id Int
+    permission    Permission @relation(fields: [permission_id], references: [id])
+    
+    resource_id   Int
+    resource      Resource @relation(fields: [resource_id], references: [id])
+
+}
+
+model Permission {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    rolePermission RolePermission[]
+    name           String
+    description    String
+}
+
+model Resource {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    rolePermission RolePermission[]
+    name           String
+    description    String
+}
+
+model OrderInvitation {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    owner   String
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+    
+}
