@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
@@ -24,6 +24,24 @@ model User {
 
     accountUser AccountUser[]
     orderInvitation OrderInvitation[]
+    worker Worker[]
+    accountInvitation AccountInvitation[]
+}
+
+model Account {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name        String
+    accountUser AccountUser[]
+    client      Client[]
+    service     Service[]
+    tool        Tool[]
+    order       Order[]
+    accountInvitation AccountInvitation[]
 }
 
 model AccountUser {
@@ -43,18 +61,6 @@ model AccountUser {
     role    Role @relation(fields: [role_id], references: [id])
 }
 
-model Account {
-    id        Int      @id @default(autoincrement())
-    uuid      String   @unique @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    active    Boolean  @default(true)
-
-    name        String
-    accountUser AccountUser[]
-    client      Client[]
-}
-
 model Client {
     id        Int      @id @default(autoincrement())
     uuid      String   @unique @default(uuid())
@@ -68,6 +74,8 @@ model Client {
 
     address_id Int
     address    Address @relation(fields: [address_id], references: [id])
+
+    order Order[]
 }
 
 model Address {
@@ -98,6 +106,7 @@ model Role {
     description String
     accountUser AccountUser[]
     rolePermission RolePermission[]
+    accountInvitation AccountInvitation[]
 }
 
 model RolePermission {
@@ -142,6 +151,166 @@ model Resource {
     description    String
 }
 
+
+
+model Worker {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    salary  Float
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+}
+
+model Car {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    car_type   CarType
+
+    order Order[]
+}
+
+enum CarType {
+    car
+}
+
+model Field {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    required   Boolean
+    field_type FieldType
+
+    serviceField ServiceField[]
+}
+
+enum FieldType {
+    String
+    Number
+    Date
+    Time
+    DateTime
+    Boolean
+}
+
+model Service {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active     Boolean  @default(true)
+
+    name       String
+    price      Float
+    description String
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    serviceField ServiceField[]
+    orderService OrderService[]
+}
+
+model ServiceField {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    service_id Int
+    service    Service @relation(fields: [service_id], references: [id])
+
+    field_id Int
+    field    Field @relation(fields: [field_id], references: [id])
+
+    serviceFieldResponse ServiceFieldResponse[]
+}
+
+model Tool {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    tool_type  ToolType
+    description String
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+}
+
+enum ToolType {
+    Tool
+    Material
+}
+
+model Order {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    total      Float
+    starts_at  DateTime
+    estimated_completation_at DateTime
+    status     OrderStatus
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    client_id Int
+    client    Client @relation(fields: [client_id], references: [id])
+
+    car_id Int
+    car    Car @relation(fields: [car_id], references: [id])
+
+    orderService OrderService[]
+    orderInvitation OrderInvitation[]
+    orderEvidence OrderEvidence[]
+    review Review[]
+}
+
+enum OrderStatus {
+    Open
+    InProgress
+    Done
+}
+
+model OrderService {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    price      Float
+
+    order_id   Int
+    order      Order @relation(fields: [order_id], references: [id])
+
+    service_id Int
+    service    Service @relation(fields: [service_id], references: [id])
+
+    serviceFieldResponse ServiceFieldResponse[]
+}
+
 model OrderInvitation {
     id        Int      @id @default(autoincrement())
     uuid      String   @unique @default(uuid())
@@ -149,9 +318,76 @@ model OrderInvitation {
     updatedAt DateTime @updatedAt
     active    Boolean  @default(true)
 
-    owner   String
+    owner   Boolean
+
+    worker_id Int
+    worker    User @relation(fields: [worker_id], references: [id])
+    
+    order_id Int
+    order    Order @relation(fields: [order_id], references: [id])
+}
+
+model OrderEvidence {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    order_id Int
+    order    Order @relation(fields: [order_id], references: [id])
+
+    file  String
+    comment String
+}
+
+model Review {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    text   String
+    done   Boolean
+
+    order_id Int
+    order    Order @relation(fields: [order_id], references: [id])
+}
+
+model ServiceFieldResponse {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    response String
+
+    serviceField_id Int
+    serviceField    ServiceField @relation(fields: [serviceField_id], references: [id])
+
+    orderService_id Int
+    orderService    OrderService @relation(fields: [orderService_id], references: [id])
+}
+
+model AccountInvitation {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    email      String
+    token      String
 
     user_id Int
     user    User @relation(fields: [user_id], references: [id])
-    
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    role_id Int
+    role    Role @relation(fields: [role_id], references: [id])
 }
