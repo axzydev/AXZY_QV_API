@@ -25,6 +25,7 @@ model User {
     accountUser AccountUser[]
     orderInvitation OrderInvitation[]
     worker Worker[]
+    accountInvitation AccountInvitation[]
 }
 
 model Account {
@@ -40,6 +41,7 @@ model Account {
     service     Service[]
     tool        Tool[]
     order       Order[]
+    accountInvitation AccountInvitation[]
 }
 
 model AccountUser {
@@ -104,6 +106,7 @@ model Role {
     description String
     accountUser AccountUser[]
     rolePermission RolePermission[]
+    accountInvitation AccountInvitation[]
 }
 
 model RolePermission {
@@ -366,4 +369,25 @@ model ServiceFieldResponse {
 
     orderService_id Int
     orderService    OrderService @relation(fields: [orderService_id], references: [id])
+}
+
+model AccountInvitation {
+    id        Int      @id @default(autoincrement())
+    uuid      String   @unique @default(uuid())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    active    Boolean  @default(true)
+
+    name       String
+    email      String
+    token      String
+
+    user_id Int
+    user    User @relation(fields: [user_id], references: [id])
+
+    account_id Int
+    account    Account @relation(fields: [account_id], references: [id])
+
+    role_id Int
+    role    Role @relation(fields: [role_id], references: [id])
 }
