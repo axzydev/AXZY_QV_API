@@ -11,7 +11,7 @@ export const getAll = async () => {
   }
 }
 
-export const create = async (user: UserCreateDto) => {
+export const register = async (user: UserCreateDto) => {
   try {
     const newUser = prismaClient.user.create({
       data: {
