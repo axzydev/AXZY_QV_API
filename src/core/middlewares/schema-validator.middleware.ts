@@ -5,7 +5,7 @@ const apiSpec = 'swagger.yaml';
 export const apiValidator = () => {
   return OpenApiValidator.middleware({
     apiSpec,
-    validateRequests: true,
+    validateRequests: false,
     validateResponses: false,
   });
 };

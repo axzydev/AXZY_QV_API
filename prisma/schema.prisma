@@ -12,12 +12,10 @@ model User {
     uuid                            String    @unique @default(uuid())
     name                            String
     email                           String    @unique
-    password                        String
+    password                        String?
     confirmed_token                 String?
     confirmed_at                    DateTime?
-    confirmed_token_expiration      DateTime?
     reset_password_token            String?
-    reset_password_token_expiration DateTime?
     createdAt                       DateTime  @default(now())
     updatedAt                       DateTime  @updatedAt
     active                          Boolean   @default(true)
@@ -36,6 +34,7 @@ model Account {
     active    Boolean  @default(true)
 
     name        String
+
     accountUser AccountUser[]
     client      Client[]
     service     Service[]
@@ -88,8 +87,8 @@ model Address {
     client Client[]
 
     address      String
-    street       String
-    neighborhood String
+    street       String?
+    neighborhood String?
     postal_code  String
     city         String
     state        String
@@ -102,8 +101,9 @@ model Role {
     updatedAt DateTime @updatedAt
     active    Boolean  @default(true)
 
-    name        String
-    description String
+    name        String @unique
+    description String?
+
     accountUser AccountUser[]
     rolePermission RolePermission[]
     accountInvitation AccountInvitation[]
@@ -136,7 +136,7 @@ model Permission {
 
     rolePermission RolePermission[]
     name           String
-    description    String
+    description    String?
 }
 
 model Resource {
@@ -160,7 +160,7 @@ model Worker {
     updatedAt DateTime @updatedAt
     active    Boolean  @default(true)
 
-    salary  Float
+    salary  Float?
 
     user_id Int
     user    User @relation(fields: [user_id], references: [id])
@@ -214,8 +214,8 @@ model Service {
     active     Boolean  @default(true)
 
     name       String
-    price      Float
-    description String
+    price      Float?
+    description String?
 
     account_id Int
     account    Account @relation(fields: [account_id], references: [id])
@@ -249,7 +249,7 @@ model Tool {
 
     name       String
     tool_type  ToolType
-    description String
+    description String?
 
     account_id Int
     account    Account @relation(fields: [account_id], references: [id])
@@ -269,7 +269,7 @@ model Order {
 
     total      Float
     starts_at  DateTime
-    estimated_completation_at DateTime
+    estimated_completation_at DateTime?
     status     OrderStatus
 
     account_id Int
