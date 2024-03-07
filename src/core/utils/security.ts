@@ -8,12 +8,15 @@ export const hashPassword = async (password: string) =>
 export const comparePassword = async (password: string, hash: string) =>
   await bcrypt.compare(password, hash);
 
-export const generateJWT = (payload: any | {}) =>
+export const generateJWT = async (payload: any | {}) =>
   jwt.sign(payload, secretKey, {
     expiresIn: '1d',
   });
 
-export const confirmedToken = (email: string) => 
+export const generateToken = async (email: string) => 
   jwt.sign({email}, secretKey, {
     expiresIn: '1d',
   });
+
+export const verifyToken = async (token: string) =>
+  jwt.verify(token, secretKey);

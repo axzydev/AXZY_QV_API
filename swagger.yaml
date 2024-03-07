@@ -42,7 +42,128 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
-
+  /users/confirmation:
+    get:
+      tags:
+        - users
+      summary: Confirm user
+      operationId: confirmUser
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User confirmed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserConfirmRedirect'
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Login user
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User logged in
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserLogin'
+  /users/resend_confirmation:
+    post:
+      tags:
+        - users
+      summary: Resend confirmation email
+      operationId: ResendEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+      responses:
+        '200':
+          description: User resend email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResendEmail'
+  /users/forgot_password:
+    post:
+      tags:
+        - users
+      summary: Reset password email
+      operationId: ResetPasswordEmail
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+              required:
+                - email
+      responses:
+        '200':
+          description: User reset password email
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResetPasswordEmail'
+  /users/reset_password:
+    post:
+      tags:
+        - users
+      summary: Reset password
+      operationId: ResetPassword
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                password:
+                  type: string
+                  format: password
+              required:
+                - token
+                - password
+      responses:
+        '200':
+          description: User reset password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResetPassword'
 components:
   schemas:
     User:
@@ -71,3 +192,49 @@ components:
         - name
         - email
         - password
+    UserConfirmRedirect:
+      type: object
+      properties:
+        redirect:
+          type: string
+          format: uri
+    UserLogin:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+      required:
+        - email
+        - password
+    UserResendEmail:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    UserResetPasswordEmail:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+      required:
+        - email
+    UserResetPassword:
+      type: object
+      properties:
+        token:
+          type: string
+        password:
+          type: string
+          format: password
+      required:
+        - token
+        - password
+    
