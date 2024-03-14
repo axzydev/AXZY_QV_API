@@ -1,8 +1,8 @@
 openapi: 3.0.3
 info:
   title: QV API
-  version: 1.0.0
   description: QV API
+  version: 1.0.0
 servers:
   - url: http://localhost:4000
     description: Local server
