@@ -7,6 +7,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY swagger.yaml ./
 COPY prisma ./prisma/
+COPY .env ./
 
 # Install app dependencies
 RUN npm install
@@ -20,6 +21,7 @@ FROM node:16-alpine
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/swagger.yaml ./
+COPY --from=builder /app/.env ./
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 4000
