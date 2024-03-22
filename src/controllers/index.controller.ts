@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
-import { index } from "../services/index.service";
+import { createTResult } from "../core/mappers/tresult.mapper";
 
 export const helloWorld = async (req: Request, res: Response) => {
-  const response = await index();
-  res.json(response);
+  res.json(
+    createTResult({
+      message: "Hello World",
+    })
+  );
 };
 

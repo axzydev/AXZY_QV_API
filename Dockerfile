@@ -16,6 +16,8 @@ COPY . .
 
 RUN npm run build
 
+RUN npx prisma generate
+
 FROM node:16-alpine
 
 COPY --from=builder /app/node_modules ./node_modules

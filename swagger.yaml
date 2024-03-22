@@ -7,9 +7,27 @@ servers:
   - url: http://localhost:4000
     description: Local server
 tags:
+  - name: index
+    description: Operations about index
   - name: users
     description: Operations about users
 paths:
+  /:
+    get:
+      tags:
+        - index
+      summary: Get index
+      operationId: getIndex
+      responses:
+        '200':
+          description: Index
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /users:
     get:
       tags:
@@ -188,10 +206,6 @@ components:
         password:
           type: string
           format: password
-      required:
-        - name
-        - email
-        - password
     UserConfirmRedirect:
       type: object
       properties:
