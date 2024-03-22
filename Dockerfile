@@ -14,9 +14,10 @@ RUN npm install
 
 COPY . .
 
+RUN npx prisma generate
+
 RUN npm run build
 
-RUN npx prisma generate
 
 FROM node:16-alpine
 
