@@ -11,6 +11,7 @@ export const create = async (account: AccountCreateDto) => {
 
     return newAccount;
   } catch (err) {
-    throw new Error("Error creating account");
+    console.log(err);
+    throw err;
   }
 }

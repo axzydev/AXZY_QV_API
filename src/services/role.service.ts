@@ -6,7 +6,8 @@ export const getAll = async () => {
 
     return roles;
   } catch (err) {
-    throw new Error("Error getting roles");
+    console.log(err);
+    throw err;
   }
 }
 
@@ -15,7 +16,7 @@ export const getRoleBy = async (opts = {}) => {
     const role = prismaClient.role.findFirst(opts);
 
     return role;
-  } catch (err) {
-    throw new Error("Error getting role");
+  } catch (err) {console.log(err);
+    throw err;
   }
 }

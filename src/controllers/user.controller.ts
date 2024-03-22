@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
-import { register as RegisterUser, confirmation, getAll, getUserByEmail, getUserByResetToken, isUserConfirmed, updateConfirmationToken, updatePassword, updateResetToken } from "../services/user.service";
-import { create as CreateAccount } from "../services/account.service";
-import { create as CreateAccountUser } from "../services/account_user.service";
+import { RegisterDto, UserConfirmDto, UserLoginDto, UserResetPasswordDto } from "../core/dto/user.dto";
 import { createTResult } from "../core/mappers/tresult.mapper";
 import { UsersEntityToDto } from "../core/mappers/user.mapper";
-import { RegisterDto, UserConfirmDto, UserCreateDto, UserLoginDto, UserResetPasswordDto } from "../core/dto/user.dto";
-import { generateToken, hashPassword, comparePassword, verifyToken, generateJWT } from "../core/utils/security";
-import { getRoleBy } from "../services/role.service";
 import { sendConfirmationEmail as sendEmail, sendResetPasswordEmail } from "../core/utils/email_sender"; // Assuming this is refactored out
+import { comparePassword, generateJWT, generateToken, hashPassword, verifyToken } from "../core/utils/security";
+import { create as CreateAccount } from "../services/account.service";
+import { create as CreateAccountUser } from "../services/account_user.service";
+import { getRoleBy } from "../services/role.service";
+import { register as RegisterUser, confirmation, getAll, getUserByEmail, getUserByResetToken, isUserConfirmed, updateConfirmationToken, updatePassword, updateResetToken } from "../services/user.service";
 
 export const getUsers = async (req: Request, res: Response) => {
   try {

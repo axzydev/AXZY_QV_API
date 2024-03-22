@@ -22,7 +22,8 @@ export const register = async (user: UserCreateDto) => {
 
     return newUser;
   } catch (err) {
-    throw new Error("Error creating user");
+    console.log(err);
+    throw err;
   }
 };
 
@@ -45,7 +46,8 @@ export const updateResetToken = async (email: string, token: string) => {
       },
     }); 
   } catch (err) {
-    throw new Error("Error updating reset token");
+    console.log(err);
+    throw err;
   }
 }
 
@@ -91,7 +93,8 @@ export const updateConfirmationToken = async (email: string) => {
       },
     }); 
   } catch (err) {
-    throw new Error("Error updating confirmed token");
+    console.log(err);
+    throw err;
   }
 }
 
@@ -117,7 +120,8 @@ export const confirmation = async (token: string) => {
 
     return true;
   } catch (err) {
-    throw new Error("Error confirming user");
+    console.log(err);
+    throw err;
   }
 }
 
@@ -158,7 +162,8 @@ export const getUserByResetToken = async (token: string) => {
 
     return user;
   } catch (err) {
-    throw new Error("Error getting user by reset token");
+    console.log(err);
+    throw err;
   }
 }
 
@@ -174,6 +179,7 @@ export const isUserConfirmed = async (email: string) =>{
 
     return user.confirmed_at !== null;
   } catch (err) {
-    throw new Error("Error getting user");
+    console.log(err);
+    throw err;
   }
 }
